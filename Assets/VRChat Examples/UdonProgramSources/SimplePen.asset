@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f11136daadff0b44ac2278a314682ab, type: 3}
   m_Name: SimplePen
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 0d8c08f4ca892924f8b5b095a4649c34,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 78f76925e71da794ba66a39140caab89,
     type: 2}
   udonAssembly: ".data_start\r\n\r\n    .export minMoveDistance\r\n    .export penTip\r\n   
     .export pointsPerUpdate\r\n    .export linesContainer\r\n    .sync nextLineIndex,

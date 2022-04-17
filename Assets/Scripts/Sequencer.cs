@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
 using UdonSharp;
-using VRC.SDKBase;
 
-[UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-public class Sequencer : MonoBehaviour
+//[UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+public class Sequencer : UdonSharpBehaviour
 {
-	[SerializeField] private bool[] m_sequence = new bool[8];
+	[SerializeField] private bool[] m_sequence = new bool[16];
 
 	[SerializeField] private AudioSource m_audioSource;
 	[SerializeField] private AudioClip m_audioClip;
 	[SerializeField, Min(20)] private float m_bpm = 130.0f;
 
-	private int[] m_playheads = new int[10];
+	private int m_playhead = -1;
 	private float[] m_audioClipData;  // all audioclips will be summed to mono
 	private double m_nextStepTime;
 	private int m_stepIndex;
@@ -20,18 +19,16 @@ public class Sequencer : MonoBehaviour
 
 	public int SequenceLength { get { return m_sequence.Length; } }
 
-	private void Start()
+	void Start()
 	{
 		m_sampleRate = AudioSettings.outputSampleRate;
-
-		for(int i = 0; i < m_playheads.Length; i++)
-		{
-			m_playheads[i] = -1;
-		}
 
 		// ADD MONO SUMMING LOGIC HERE
 		m_audioClipData = new float[m_audioClip.samples * m_audioClip.channels];
 		m_audioClip.GetData(m_audioClipData, 0);
+
+		Debug.Log("[Sequencer.Start()] m_sampleRate: " + m_sampleRate);
+		Debug.Log("[Sequencer.Start()] m_audioClipDataLength: " + m_sampleRate);
 
 		Play();
 	}
@@ -39,7 +36,8 @@ public class Sequencer : MonoBehaviour
 	public void Play()
 	{
 		m_stepIndex = -1;
-		m_nextStepTime = AudioSettings.dspTime * AudioSettings.outputSampleRate;
+		m_playhead = -1;
+		m_nextStepTime = AudioSettings.dspTime * m_sampleRate;
 		m_isPlaying = true;
 	}
 
@@ -69,37 +67,33 @@ public class Sequencer : MonoBehaviour
 				// if this step is on, initialize a playhead by setting it to the first sample index
 				if(m_sequence[m_stepIndex] == true)
 				{
-					for(int i = 0; i < m_playheads.Length; i++)
-					{
-						if(m_playheads[i] == -1)
-						{
-							m_playheads[i] = 0;
-							break;
-						}
-					}
+					m_playhead = 0;
 				}
 			}
 
-			// play from the playheads
-			for(int i = 0; i < m_playheads.Length; i++)
-			{
-				if(m_playheads[i] > -1) 
+			if(m_playhead > -1)
+			{ 
+				for(int channelIndex = 0; channelIndex < _channels; channelIndex++)
 				{
-					for(int channelIndex = 0; channelIndex < _channels; channelIndex++)
-					{
-						_data[dataIndex * _channels + channelIndex] += m_audioClipData[m_playheads[i]];
-					}
+					_data[dataIndex * _channels + channelIndex] += m_audioClipData[m_playhead];
+				}
 
-					m_playheads[i]++;
+				m_playhead++;
 
-					if(m_playheads[i] >= m_audioClipData.Length)
-					{
-						m_playheads[i] = -1;
-					}
+				if(m_playhead >= m_audioClipData.Length)
+				{
+					m_playhead = -1;
 				}
 			}
 		}
 	}
 
+	// UdonSharp doesn't support OnAudioFilterRead yet, so we expose it manually
+	private float[] onAudioFilterReadData;
+	private int onAudioFilterReadChannels;
+	public void _onAudioFilterRead()
+	{
+		OnAudioFilterRead(onAudioFilterReadData, onAudioFilterReadChannels);
+	}
 }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f11136daadff0b44ac2278a314682ab, type: 3}
   m_Name: FollowPlayer
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: f6d6bfde271012d4089e66a6bb30698f,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: c008024d33ff2144f9a8d4a82b4d6a52,
     type: 2}
   udonAssembly: ".data_start\r\n\r\n    .export smoothPosition\r\n    .export target\r\n   
     \r\n    __Boolean_0: %SystemBoolean, null\r\n    __Object_0: %SystemObject, null\r\n   

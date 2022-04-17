@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f11136daadff0b44ac2278a314682ab, type: 3}
   m_Name: PickupAndUse
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 6d2a62e8f5e9ada43aad7f6a47864486,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: da1e6309e3865454492ca1c357930c2e,
     type: 2}
   udonAssembly: ".data_start\r\n\r\n    \r\n    __instance_0: %UnityEngineMaterial,
     null\r\n    __value_0: %UnityEngineColor, null\r\n    __instance_1: %UnityEngineMaterial,
